@@ -59,6 +59,7 @@ property: LOWER_IDENT COLON expression SEMICOLON;
 ifClause: IF BOX_BRACKET_OPEN conditionalExpression BOX_BRACKET_CLOSE body elseClause?;
 elseClause: ELSE body;
 
+
 expression: literal                     #literalValue
         |   variableReference           #variableValue
         |   expression (MUL | DIV) expression   #mulDivOperation
@@ -66,7 +67,6 @@ expression: literal                     #literalValue
 
 conditionalExpression:  bool
         |               variableReference;
-
 //variables
 variableAssignment: variableReference ASSIGNMENT_OPERATOR (variableReference | literal) SEMICOLON;
 literal:    COLOR       #colorLiteral

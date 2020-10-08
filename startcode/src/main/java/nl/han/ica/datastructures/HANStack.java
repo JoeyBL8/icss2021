@@ -22,7 +22,11 @@ public class HANStack<T> implements IHANStack<T> {
 
     @Override
     public T peek() {
-        return internalList.getFirst();
+        try {
+            return internalList.getFirst();
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     public int getSize() {
