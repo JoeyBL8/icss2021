@@ -4,8 +4,10 @@ import nl.han.ica.icss.ast.Operation;
 
 public class AddOperation extends Operation {
 
+    public static final String LABEL = "Add";
+
     @Override
     public String getNodeLabel() {
-        return "Add";
+        return LABEL;
     }
 }

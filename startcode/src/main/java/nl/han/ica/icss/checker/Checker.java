@@ -4,6 +4,7 @@ import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.DivisionOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
@@ -94,6 +95,10 @@ public class Checker {
             operation.setError("You cannot use a color inside an operation");
             return UNDEFINED;
         }
+        if (leftType == BOOL || rightType == BOOL) {
+            operation.setError("You cannot use a boolean value inside an operation");
+            return UNDEFINED;
+        }
         if (operation instanceof AddOperation || operation instanceof SubtractOperation) {
             if (leftType != rightType) {
                 operation.setError("Add and subtract operations should always be of the same type.");
@@ -112,6 +117,14 @@ public class Checker {
                 } else {
                     return leftType;
                 }
+            }
+        }
+        if (operation instanceof DivisionOperation) {
+            if (rightType != SCALAR) {
+                operation.setError("Division can only been done through a scalar.");
+                return UNDEFINED;
+            } else {
+                return leftType;
             }
         }
         return UNDEFINED;
@@ -150,16 +163,19 @@ public class Checker {
     }
 
     private void checkVariableAssignment(VariableAssignment variableAssignment) {
+        ExpressionType expressionType = checkExpression(variableAssignment.expression);
+        if (expressionType == UNDEFINED) {
+            variableAssignment.setError("Attempting to assign a unsupported expression to this variable");
+            return;
+        }
         if (variableDefined(variableAssignment.name.name)) {
-            variableAssignment.setError("Trying to declare a variable which has already been declared");
-        } else {
-            ExpressionType expressionType = checkExpression(variableAssignment.expression);
-            if (expressionType == UNDEFINED) {
-                variableAssignment.setError("Attempting to assign a unsupported expression to this variable");
-            } else {
-                variableTypes.get(0).put(variableAssignment.name.name, expressionType);
+            ExpressionType oldType = getVariableType(variableAssignment.name.name);
+            if (expressionType != oldType) {
+                variableAssignment.setError("Variable was already declared as " + oldType.name() + " and cannot be declared as " + expressionType.name());
+                return;
             }
         }
+        variableTypes.get(0).put(variableAssignment.name.name, expressionType);
     }
 
     private boolean typeMatchesProperty(String propertyName, ExpressionType type) {

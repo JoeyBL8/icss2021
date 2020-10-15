@@ -40,6 +40,7 @@ PLUS: '+';
 MIN: '-';
 MUL: '*';
 DIV: '/';
+EXP: '^';
 ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
@@ -62,6 +63,7 @@ elseClause: ELSE body;
 
 expression: literal                     #literalValue
         |   variableReference           #variableValue
+        |   expression EXP expression #exponentOperation
         |   expression (MUL | DIV) expression   #mulDivOperation
         |   expression (PLUS | MIN) expression  #addSubOperation;
 
