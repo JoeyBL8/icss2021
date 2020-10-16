@@ -3,10 +3,7 @@ package nl.han.ica.icss.checker;
 import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.operations.AddOperation;
-import nl.han.ica.icss.ast.operations.DivisionOperation;
-import nl.han.ica.icss.ast.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.operations.SubtractOperation;
+import nl.han.ica.icss.ast.operations.*;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 
@@ -90,24 +87,20 @@ public class Checker {
         // if a previous error occurred, keep throwing up the expressionType
         if (leftType == UNDEFINED || rightType == UNDEFINED) {
             return UNDEFINED;
-        }
-        if (leftType == COLOR || rightType == COLOR) {
+        } else if (leftType == COLOR || rightType == COLOR) {
             operation.setError("You cannot use a color inside an operation");
             return UNDEFINED;
-        }
-        if (leftType == BOOL || rightType == BOOL) {
+        } else if (leftType == BOOL || rightType == BOOL) {
             operation.setError("You cannot use a boolean value inside an operation");
             return UNDEFINED;
-        }
-        if (operation instanceof AddOperation || operation instanceof SubtractOperation) {
+        } else if (operation instanceof AddOperation || operation instanceof SubtractOperation) {
             if (leftType != rightType) {
                 operation.setError("Add and subtract operations should always be of the same type.");
                 return UNDEFINED;
             } else {
                 return leftType;
             }
-        }
-        if (operation instanceof MultiplyOperation) {
+        } else if (operation instanceof MultiplyOperation) {
             if (leftType != SCALAR && rightType != SCALAR) {
                 operation.setError("Multiplication Operations should always have at least 1 scalar expression");
                 return UNDEFINED;
@@ -118,10 +111,19 @@ public class Checker {
                     return leftType;
                 }
             }
-        }
-        if (operation instanceof DivisionOperation) {
+        } else if (operation instanceof DivisionOperation) {
             if (rightType != SCALAR) {
                 operation.setError("Division can only been done through a scalar.");
+                return UNDEFINED;
+            } else {
+                return leftType;
+            }
+        } else if (operation instanceof ExponentOperation) {
+            if (rightType != SCALAR) {
+                operation.setError("The exponent can only be a scalar value");
+                return UNDEFINED;
+            } else if (leftType != SCALAR) {
+                operation.setError("The base can only be a scalar value");
                 return UNDEFINED;
             } else {
                 return leftType;

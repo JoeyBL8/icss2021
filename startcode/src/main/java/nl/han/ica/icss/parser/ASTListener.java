@@ -11,10 +11,7 @@ import nl.han.ica.datastructures.HANStack;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
-import nl.han.ica.icss.ast.operations.AddOperation;
-import nl.han.ica.icss.ast.operations.DivisionOperation;
-import nl.han.ica.icss.ast.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.operations.SubtractOperation;
+import nl.han.ica.icss.ast.operations.*;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -149,6 +146,13 @@ public class ASTListener extends ICSSBaseListener {
 		currentContainer.push(operation);
 	}
 
+	@Override
+	public void exitExponentOperation(ICSSParser.ExponentOperationContext ctx) {
+		Operation operation = new ExponentOperation();
+		operation.rhs = (Expression) currentContainer.pop();
+		operation.lhs = (Expression) currentContainer.pop();
+		currentContainer.push(operation);
+	}
 
 	@Override
 	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {

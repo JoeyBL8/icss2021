@@ -7,10 +7,7 @@ import nl.han.ica.icss.ast.literals.BoolLiteral;
 import nl.han.ica.icss.ast.literals.PercentageLiteral;
 import nl.han.ica.icss.ast.literals.PixelLiteral;
 import nl.han.ica.icss.ast.literals.ScalarLiteral;
-import nl.han.ica.icss.ast.operations.AddOperation;
-import nl.han.ica.icss.ast.operations.DivisionOperation;
-import nl.han.ica.icss.ast.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.operations.SubtractOperation;
+import nl.han.ica.icss.ast.operations.*;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.ArrayList;
@@ -100,6 +97,10 @@ public class EvalExpressions implements Transform {
                 } else {
                     value = parseLiteral(left) / rightValue;
                 }
+                break;
+            case ExponentOperation.LABEL:
+                int exponent = parseLiteral(right);
+                value = (int)Math.pow(parseLiteral(left), exponent);
                 break;
             default:
                 throw new RuntimeException("Checker failed and let something through... This shouldn't be reached...");

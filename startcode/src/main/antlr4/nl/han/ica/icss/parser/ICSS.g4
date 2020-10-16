@@ -70,7 +70,7 @@ expression: literal                     #literalValue
 conditionalExpression:  bool
         |               variableReference;
 //variables
-variableAssignment: variableReference ASSIGNMENT_OPERATOR (variableReference | literal) SEMICOLON;
+variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 literal:    COLOR       #colorLiteral
         |   PIXELSIZE   #pixelLiteral
         |   PERCENTAGE  #percentageLiteral
